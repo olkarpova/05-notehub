@@ -13,7 +13,6 @@ import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import Pagination from "../Pagination/Pagination";
 import Modal from "../Modal/Modal";
-import NoteForm, { type NoteFormValues } from "../NoteForm/NoteForm";
 
 export default function App() {
   // const queryClient = useQueryClient();
