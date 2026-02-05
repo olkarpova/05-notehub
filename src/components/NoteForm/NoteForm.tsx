@@ -3,7 +3,7 @@ import css from "./NoteForm.module.css"
 import { noteValidationSchema } from "./validationSchema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createNote } from "../../services/noteService";
-import { NoteTag } from "../../types/note";
+import type { NoteTag } from "../../types/note";
 
 interface NoteFormProps {
     onCancel: () => void;
