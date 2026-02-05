@@ -1,9 +1,10 @@
 import { Formik, Form, Field, type FormikHelpers, ErrorMessage } from "formik";
 import css from "./NoteForm.module.css"
 import { noteValidationSchema } from "./validationSchema";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createNote } from "../../services/noteService";
 
 interface NoteFormProps {
-    onSubmit: (values: NoteFormValues) => void;
     onCancel: () => void;
 }
 
@@ -18,10 +19,25 @@ const initialValues: NoteFormValues = {
     tag: 'Todo',
 }
 
-export default function NoteForm({ onSubmit, onCancel }: NoteFormProps) {
+
+export default function NoteForm({ onCancel }: NoteFormProps) {
+
+    const queryClient = useQueryClient();
+
+    const createNoteMutation = useMutation({
+        mutationFn: createNote,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['notes'] });
+            onCancel();
+        },
+        onError: (error) => {
+            console.error("Error creating note:", error);
+            alert("Failed to create note. Please try again.");
+        },
+    })
     
     const handleSubmit = (values: NoteFormValues, actions: FormikHelpers<NoteFormValues>) => {
-        onSubmit(values);
+        createNoteMutation.mutate(values);
         actions.resetForm();
         actions.setSubmitting(false);
     }
@@ -33,7 +49,6 @@ export default function NoteForm({ onSubmit, onCancel }: NoteFormProps) {
             onSubmit={handleSubmit}>
             {({ isSubmitting, isValid, dirty }) => (
                <Form className={css.form}>
-                {/* <fieldset className={css.fieldset}> */}
                     <div className={css.formGroup}>
                         <label htmlFor="title">Title</label>
                         <Field
@@ -68,7 +83,6 @@ export default function NoteForm({ onSubmit, onCancel }: NoteFormProps) {
                         </Field>
                         <ErrorMessage name="tag" component="span" className={css.error} />
                     </div>
-                {/* </fieldset> */}
             
                 <div className={css.actions}>
                     <button
@@ -81,7 +95,6 @@ export default function NoteForm({ onSubmit, onCancel }: NoteFormProps) {
                     <button
                         type="submit"
                         className={css.submitButton}
-                        // disabled={false}
                         disabled={isSubmitting || !isValid || !dirty}
                     >
                         Create note

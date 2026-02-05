@@ -1,4 +1,4 @@
-export type NoteTag = "Todo" | "Work" | "Personal" | "Important" | "Ideas";
+export type NoteTag = "Todo" | "Work" | "Personal" | "Meeting" | "Shopping";
 
 export interface Note {
     id: string;
@@ -6,7 +6,7 @@ export interface Note {
     content: string;
     createdAt: string;
     updatedAt: string;
-    tag: string;
+    tag: NoteTag;
 }
     // overview: string;
     // release_date: string;
